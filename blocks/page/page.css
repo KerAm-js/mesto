@@ -5,6 +5,8 @@
   min-width: 320px;
   box-sizing: border-box;
   padding: 45px 0 60px;
+  color: #ffffff;
+  font-family: Inter, Arial, sans-serif;
 }
 
 @media screen and (max-width: 1024px) {
