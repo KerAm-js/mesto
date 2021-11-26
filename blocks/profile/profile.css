@@ -19,3 +19,10 @@
     flex-direction: column;
   }
 }
+
+@media screen and (max-width: 410px) {
+  .profile {
+    padding-left: 19px;
+    padding-right: 19px;
+  }
+}
