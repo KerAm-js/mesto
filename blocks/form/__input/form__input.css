@@ -1,0 +1,21 @@
+.form__input {
+  padding: 10px 3px 13px;
+  margin: 0 0 20px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.form__input:last-of-type {
+  margin-bottom: 48px;
+}
+
+@media screen and (max-width: 510px) {
+  .form__input {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
