@@ -3,13 +3,15 @@
   margin: 0 0 0 auto;
   width: 150px;
   min-height: 50px;
-  background: none;
   border: 2px solid #fff;
-  cursor: pointer;
   transition: opacity .2s linear;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url('../../../images/VectorPlus.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 22px 22px;
 }
 
 .profile__add-button:hover {
@@ -20,5 +22,6 @@
   .profile__add-button {
     width: 100%;
     margin: 36px 0 0;
+    background-size: 16px 16px;
   }
 }

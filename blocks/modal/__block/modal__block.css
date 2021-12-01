@@ -3,7 +3,6 @@
   position: relative;
   width: 100%;
   max-width: 430px;
-  min-height: 330px;
   padding: 34px 36px 37px;
   margin: 0;
   box-sizing: border-box;
@@ -14,9 +13,9 @@
   justify-content: space-between;
 }
 
-@media screen and (max-width: 510px) {
+@media screen and (max-width: 575px) {
   .modal__block {
-    min-height: 322px;
     padding: 25px 22px;
+    max-width: 282px;
   }
 }

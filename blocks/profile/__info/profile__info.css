@@ -1,4 +1,9 @@
 .profile__info {
+  overflow: hidden;
+  margin-right: 20px;
+  width: auto;
+  max-width: 49%;
+  justify-content: start;
   display: grid;
   grid-template-columns: 1fr 42px;
   grid-template-rows: 39px 34px;
@@ -15,6 +20,8 @@
 
 @media screen and (max-width: 680px) {
   .profile__info {
+    margin-right: 0;
+    max-width: 100%;
     width: 100%;
     margin-top: 26px;
     grid-template-columns: 1fr auto 1fr;
