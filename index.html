@@ -26,87 +26,28 @@
             Исследователь океана
           </p>
         </div>
-        <button type="button" aria-label="добавить пост" class="button profile__add-button">
+        <button type="button" aria-label="добавить пост" class="button profile__add-place-button">
         </button>
       </section>
 
       <section class="elements"> 
         <ul class="elements__list">
-          <li class="element">
-            <img class="element__image" src="./images/kirill-pershin-1088404-unsplash.jpg" alt="Карачаво-Черкессия">
-            <div class="element__info">
-              <h2 class="element__title">
-                Карачаево-Черкессия
-              </h2>
-              <button type="button" aria-label="лайк" class="button element__like-button">
-              </button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/kirill-pershin-1404681-unsplash.png" alt="Эльбрус">
-            <div class="element__info">
-              <h2 class="element__title">
-                Эльбрус
-              </h2>
-              <button type="button" aria-label="лайк" class="button element__like-button">
-              </button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/kirill-pershin-1556355-unsplash.png" alt="Домбай">
-            <div class="element__info">
-              <h2 class="element__title">
-                Домбай
-              </h2>
-              <button type="button" aria-label="лайк" class="button element__like-button">
-              </button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/kirill-pershin-1088404-unsplash.jpg" alt="Карачаво-Черкессия">
-            <div class="element__info">
-              <h2 class="element__title">
-                Карачаево-Черкессия
-              </h2>
-              <button type="button" aria-label="лайк" class="button element__like-button">
-              </button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/kirill-pershin-1404681-unsplash.png" alt="Эльбрус">
-            <div class="element__info">
-              <h2 class="element__title">
-                Эльбрус
-              </h2>
-              <button type="button" aria-label="лайк" class="button element__like-button">
-              </button>
-            </div>
-          </li>
-          <li class="element">
-            <img class="element__image" src="./images/kirill-pershin-1556355-unsplash.png" alt="Домбай">
-            <div class="element__info">
-              <h2 class="element__title">
-                Домбай
-              </h2>
-              <button type="button" aria-label="лайк" class="button element__like-button">
-              </button>
-            </div>
-          </li>
         </ul>
       </section>
+
     </main>
 
     <footer class="footer">
       <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
 
-    <div class="modal">
+    <div class="modal modal_type_profile">
       <div class="modal__block">
         <h2 class="modal__title">
           Редактировать профиль
         </h2>
         <button type="button" aria-label="закрыть" class="button modal__close-button"></button>
-        <form name="form" class="form">
+        <form name="form" class="form form_type_profile">
           <input 
             placeholder="имя" 
             required
@@ -121,13 +62,54 @@
             type="text" 
             class="form__input form__input_value_about"
           >
-          <button type="submit" aria-label="сохранить" class="button form__save-button">
+          <button type="submit" aria-label="сохранить" class="button form__button form__button_type_save">
             Сохранить
           </button>
         </form>
       </div>
     </div>
+
+    <div class="modal modal_type_place">
+      <div class="modal__block">
+        <h2 class="modal__title">
+          Новое место
+        </h2>
+        <button type="button" aria-label="закрыть" class="button modal__close-button"></button>
+        <form name="form" class="form form_type_place">
+          <input 
+            placeholder="Название" 
+            required
+            name="place-name" 
+            type="text" 
+            class="form__input form__input_value_place-name"
+          >
+          <input 
+            placeholder="Ссылка на картинку" 
+            required
+            name="image-link" 
+            type="text" 
+            class="form__input form__input_value_image-link"
+          >
+          <button type="submit" aria-label="создать" class="button form__button form__button_type_add ">
+            Создать
+          </button>
+        </form>
+      </div>
+    </div>
     
+    <template id="element">
+      <li class="element">
+        <div class="element__image"></div>
+        <button type="button" aria-label="удалить" class="button element__delete-button"></button>
+        <div class="element__info">
+          <h2 class="element__title">
+            
+          </h2>
+          <button type="button" aria-label="лайк" class="button element__like-button">
+          </button>
+        </div>
+      </li>
+    </template>
   </div>
   <script src="./script/script.js"></script>
 </body>
