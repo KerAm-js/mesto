@@ -12,6 +12,8 @@ const addPlaceBtn = document.querySelector('.profile__add-place-button');
 const elements = document.querySelector('.elements__list');
 const placeNameInput = newPlaceForm.querySelector('.form__input_value_place-name');
 const imageLinkInput = newPlaceForm.querySelector('.form__input_value_image-link');
+const imageModal = document.querySelector('.modal_type_image');
+
 
 const initialCards = [
   {
@@ -40,25 +42,35 @@ const initialCards = [
   }
 ];
 
-function addCard(name, link) {
+function clearInputs(...inputs) {
+  inputs.forEach(input => input.value = '')
+}
+
+function createNewCard(name, link) {
   const newElement = document.querySelector('#element').content.cloneNode(true);
   newElement.querySelector('.element__image').style.backgroundImage = `url(${link})`;
+  newElement.querySelector('.element__image').addEventListener('click', () => showImageModal(link, name));
   newElement.querySelector('.element__title').textContent = name;
   newElement.querySelector('.element__like-button').addEventListener('click', setLike);
   newElement.querySelector('.element__delete-button').addEventListener('click', deleteCard);
-  elements.prepend(newElement);
+  return newElement;
 }
 
 function deleteCard(event) {
   event.target.closest('.element').remove();
 }
 
-function createNewCard(event) {
-  event.preventDefault()
-  const name = placeNameInput.value;
-  const link = imageLinkInput.value;
+function addCard(name, link) {
+  elements.prepend(createNewCard(name, link));
+}
+
+function onCreateCardHandler(event) {
+  event.preventDefault();
+  const name = placeNameInput.value; 
+  const link = imageLinkInput.value; 
   addCard(name, link);
-  hideModal(event.target.parentElement.parentElement);
+  closePopup(newPlaceModal);
+  clearInputs(placeNameInput, imageLinkInput);
 }
 
 initialCards.forEach(card => {
@@ -70,33 +82,42 @@ function setLike(event) {
 }
 
 function showProfileModal() {
-  profileModal.style.transition = 'visibility .3s, opacity .3s linear';
   usernameInput.value = username.textContent.trim();
   userAboutInput.value = userAbout.textContent.trim();
-  profileModal.classList.toggle('modal_opened');
+  openPopup(profileModal);
 }
 
 function showNewPLaceModal() {
-  newPlaceModal.style.transition = 'visibility .3s, opacity .3s linear';
-  newPlaceModal.classList.toggle('modal_opened');
+  openPopup(newPlaceModal);
 }
 
-function hideModal(element) {
-  element.classList.toggle('modal_opened');
+function showImageModal(imageLink, placeName) {
+  imageModal.querySelector('.modal__image').src = imageLink;
+  imageModal.querySelector('.modal__image').alt = placeName;
+  imageModal.querySelector('.modal__place-name').textContent = placeName;
+  openPopup(imageModal);
+}
+
+function openPopup(element) {
+  element.closest('.modal').classList.add('modal_opened');
+}
+
+function closePopup(element) {
+  element.closest('.modal').classList.remove('modal_opened');
 }
  
 function saveUserData(event) {
   event.preventDefault()
   username.textContent = usernameInput.value;
   userAbout.textContent = userAboutInput.value;
-  hideModal(event.target.parentElement.parentElement);
+  closePopup(event.target);
 }
 
 profileEditBtn.addEventListener('click', showProfileModal);
 profileForm.addEventListener('submit', saveUserData);
 addPlaceBtn.addEventListener('click', showNewPLaceModal);
-newPlaceForm.addEventListener('submit', createNewCard);
+newPlaceForm.addEventListener('submit', onCreateCardHandler);
 
 closeModalButtons.forEach(closeBtn => {
-  closeBtn.addEventListener('click', event => hideModal(event.target.parentElement.parentElement));
+  closeBtn.addEventListener('click', event => closePopup(event.target));
 })
