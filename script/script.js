@@ -1,13 +1,13 @@
 const closeModalButtons = document.querySelectorAll('.modal__close-button');
 const profileEditBtn = document.querySelector('.profile__edit-button');
 const profileModal = document.querySelector('.modal_type_profile');
-const profileForm = document.querySelector('.form_type_profile');
+const profileForm = document.forms.formProfile;
 const username = document.querySelector('.profile__username');
 const userAbout = document.querySelector('.profile__about');
 const usernameInput = profileForm.querySelector('.form__input_value_username');
 const userAboutInput = profileForm.querySelector('.form__input_value_about');
 const newPlaceModal = document.querySelector('.modal_type_place');
-const newPlaceForm = document.querySelector('.form_type_place');
+const newPlaceForm = document.forms.formPlace;
 const addPlaceBtn = document.querySelector('.profile__add-place-button');
 const elements = document.querySelector('.elements__list');
 const placeNameInput = newPlaceForm.querySelector('.form__input_value_place-name');
@@ -41,6 +41,49 @@ const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ];
+
+const showInputError = (formElement, input, validationMessage) => {
+  const errorLabel = formElement.querySelector(`.${input.id}-error`);
+  errorLabel.textContent = validationMessage;
+  input.classList.add('form__input_type_error');
+  errorLabel.classList.add('form__input-error_active');
+}
+
+const hideInputError = (formElement, input) => {
+  const errorLabel = formElement.querySelector(`.${input.id}-error`);
+  errorLabel.textContent = '';
+  input.classList.remove('form__input_type_error');
+  errorLabel.classList.remove('form__input-error_active');
+}
+
+const isInputValid = (formElement, input) => {
+  if (!input.validity.valid) {
+    showInputError(formElement, input, input.validationMessage);
+  } else {
+    hideInputError(formElement, input);
+  }
+}
+
+const setInputEventListeners = formElement => {
+  const inputs = Array.from(formElement.querySelectorAll('.form__input'));
+  inputs.forEach(input => {
+    input.addEventListener('input', evt => {
+      isInputValid(formElement, evt.target); 
+    })
+  })
+}
+
+const enableValidation = () => {
+  const forms = Array.from(document.querySelectorAll('form'));
+  forms.forEach(form => {
+    form.addEventListener('submit', evt => {
+      evt.preventDefault();
+    });
+    setInputEventListeners(form);
+  })
+}
+
+enableValidation();
 
 function clearInputs(...inputs) {
   inputs.forEach(input => input.value = '')
