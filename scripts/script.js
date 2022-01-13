@@ -13,6 +13,7 @@ const elements = document.querySelector('.elements__list');
 const placeNameInput = newPlaceForm.querySelector('.form__input_value_place-name');
 const imageLinkInput = newPlaceForm.querySelector('.form__input_value_image-link');
 const imageModal = document.querySelector('.modal_type_image');
+const modals = document.querySelectorAll('.modal');
 
 
 const initialCards = [
@@ -42,49 +43,6 @@ const initialCards = [
   }
 ];
 
-const showInputError = (formElement, input, validationMessage) => {
-  const errorLabel = formElement.querySelector(`.${input.id}-error`);
-  errorLabel.textContent = validationMessage;
-  input.classList.add('form__input_type_error');
-  errorLabel.classList.add('form__input-error_active');
-}
-
-const hideInputError = (formElement, input) => {
-  const errorLabel = formElement.querySelector(`.${input.id}-error`);
-  errorLabel.textContent = '';
-  input.classList.remove('form__input_type_error');
-  errorLabel.classList.remove('form__input-error_active');
-}
-
-const isInputValid = (formElement, input) => {
-  if (!input.validity.valid) {
-    showInputError(formElement, input, input.validationMessage);
-  } else {
-    hideInputError(formElement, input);
-  }
-}
-
-const setInputEventListeners = formElement => {
-  const inputs = Array.from(formElement.querySelectorAll('.form__input'));
-  inputs.forEach(input => {
-    input.addEventListener('input', evt => {
-      isInputValid(formElement, evt.target); 
-    })
-  })
-}
-
-const enableValidation = () => {
-  const forms = Array.from(document.querySelectorAll('form'));
-  forms.forEach(form => {
-    form.addEventListener('submit', evt => {
-      evt.preventDefault();
-    });
-    setInputEventListeners(form);
-  })
-}
-
-enableValidation();
-
 function clearInputs(...inputs) {
   inputs.forEach(input => input.value = '')
 }
@@ -113,6 +71,7 @@ function onCreateCardHandler(event) {
   const link = imageLinkInput.value; 
   addCard(name, link);
   closePopup(newPlaceModal);
+  disableSubmitBtn({submitButtonSelector: '.form__button[type=submit]'}, event.target);
   clearInputs(placeNameInput, imageLinkInput);
 }
 
@@ -156,10 +115,25 @@ function saveUserData(event) {
   closePopup(event.target);
 }
 
+function onEscKeyDownHanlder(evt) {
+  const openedPopup = document.querySelector('.modal_opened');
+  if (evt.key === 'Escape' && openedPopup) {
+    openedPopup.classList.remove('modal_opened');
+  }
+}
+
 profileEditBtn.addEventListener('click', showProfileModal);
 profileForm.addEventListener('submit', saveUserData);
 addPlaceBtn.addEventListener('click', showNewPLaceModal);
 newPlaceForm.addEventListener('submit', onCreateCardHandler);
+document.addEventListener('keydown', onEscKeyDownHanlder);
+
+modals.forEach(modal => modal.addEventListener('click', evt => {
+  const item = evt.target;
+  if (item.classList.contains('modal') && !item.classList.contains('modal__blocj')) {
+    closePopup(evt.target);
+  }
+}))
 
 closeModalButtons.forEach(closeBtn => {
   closeBtn.addEventListener('click', event => closePopup(event.target));

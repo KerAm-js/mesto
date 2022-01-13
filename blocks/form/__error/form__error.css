@@ -1,4 +1,4 @@
-.form__input-error {
+.form__error {
   font-weight: normal;
   font-size: 12px;
   line-height: 15px;
@@ -7,6 +7,6 @@
   visibility: hidden;
 }
 
-.form__input-error:last-of-type {
+.form__error:last-of-type {
   margin-bottom: 29px;
 }
