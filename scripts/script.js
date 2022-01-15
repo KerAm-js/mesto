@@ -43,8 +43,8 @@ const initialCards = [
   }
 ];
 
-function clearInputs(...inputs) {
-  inputs.forEach(input => input.value = '')
+function clearInputs(form) {
+  form.reset();
 }
 
 function createNewCard(name, link) {
@@ -71,8 +71,11 @@ function onCreateCardHandler(event) {
   const link = imageLinkInput.value; 
   addCard(name, link);
   closePopup(newPlaceModal);
-  disableSubmitBtn({submitButtonSelector: '.form__button[type=submit]'}, event.target);
-  clearInputs(placeNameInput, imageLinkInput);
+  disableSubmitBtn({
+    submitButtonSelector: '.form__button[type=submit]',  
+    inactiveButtonClass: 'form__button_disabled',
+  }, event.target);
+  clearInputs(event.target);
 }
 
 initialCards.forEach(card => {
@@ -89,10 +92,6 @@ function showProfileModal() {
   openPopup(profileModal);
 }
 
-function showNewPLaceModal() {
-  openPopup(newPlaceModal);
-}
-
 function showImageModal(imageLink, placeName) {
   imageModal.querySelector('.modal__image').src = imageLink;
   imageModal.querySelector('.modal__image').alt = placeName;
@@ -101,10 +100,12 @@ function showImageModal(imageLink, placeName) {
 }
 
 function openPopup(element) {
+  document.addEventListener('keydown', onEscKeyDownHanlder);
   element.closest('.modal').classList.add('modal_opened');
 }
 
 function closePopup(element) {
+  document.removeEventListener('keydown', onEscKeyDownHanlder);
   element.closest('.modal').classList.remove('modal_opened');
 }
  
@@ -124,9 +125,8 @@ function onEscKeyDownHanlder(evt) {
 
 profileEditBtn.addEventListener('click', showProfileModal);
 profileForm.addEventListener('submit', saveUserData);
-addPlaceBtn.addEventListener('click', showNewPLaceModal);
+addPlaceBtn.addEventListener('click', () => openPopup(newPlaceModal));
 newPlaceForm.addEventListener('submit', onCreateCardHandler);
-document.addEventListener('keydown', onEscKeyDownHanlder);
 
 modals.forEach(modal => modal.addEventListener('click', evt => {
   const item = evt.target;
