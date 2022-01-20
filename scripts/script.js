@@ -49,7 +49,7 @@ function clearInputs(form) {
 }
 
 function addCard(name, link) {
-  const card = new Card(name, link, openPopup);
+  const card = new Card(name, link, '#element', openPopup);
   elements.prepend(card.getCard());
 }
 

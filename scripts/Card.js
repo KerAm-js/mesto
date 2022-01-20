@@ -1,12 +1,13 @@
 class Card {
-  constructor(name, link, openPopup) {
+  constructor(name, link, templateSelector, openPopup) {
     this._name = name;
     this._link = link;
     this._openPopup = openPopup;
+    this._templateSelector = templateSelector;
   }
 
   _createNewCard() {
-    this._element = document.querySelector('#element').content.cloneNode(true);
+    this._element = document.querySelector(this._templateSelector).content.cloneNode(true);
     this._element.querySelector('.element__image').style.backgroundImage = `url(${this._link})`;
     this._element.querySelector('.element__image').addEventListener('click', () => this._showImageModal(this._link, this._name));
     this._element.querySelector('.element__title').textContent = this._name;
