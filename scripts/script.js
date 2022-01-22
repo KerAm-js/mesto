@@ -16,7 +16,27 @@ const elements = document.querySelector('.elements__list');
 const placeNameInput = newPlaceForm.querySelector('.form__input_value_place-name');
 const imageLinkInput = newPlaceForm.querySelector('.form__input_value_image-link');
 const modals = document.querySelectorAll('.modal');
-const forms = Array.from(document.querySelectorAll('.form'));
+
+
+const profileFormValidator = new FormValidator({
+  inputSelector: '.form__input',
+  submitButtonSelector: '.form__button[type=submit]',
+  inactiveButtonClass: 'form__button_disabled',
+  inputErrorClass: 'form__input_error',
+  errorClass: '.form__error',
+  errorActiveClass: 'form__error_active',
+}, profileForm);
+profileFormValidator.enableValidation();
+
+const newPlaceFormValidator = new FormValidator({
+  inputSelector: '.form__input',
+  submitButtonSelector: '.form__button[type=submit]',
+  inactiveButtonClass: 'form__button_disabled',
+  inputErrorClass: 'form__input_error',
+  errorClass: '.form__error',
+  errorActiveClass: 'form__error_active',
+}, newPlaceForm);
+newPlaceFormValidator.enableValidation();
 
 
 const initialCards = [
@@ -50,30 +70,6 @@ function clearInputs(form) {
   form.reset();
 }
 
-function addCard(name, link) {
-  const card = new Card(name, link, '#element', openPopup);
-  elements.prepend(card.getCard());
-}
-
-function onCreateCardHandler(event) {
-  event.preventDefault();
-  const name = placeNameInput.value; 
-  const link = imageLinkInput.value; 
-  addCard(name, link);
-  closePopup(newPlaceModal);
-  clearInputs(event.target);
-}
-
-initialCards.forEach(card => {
-  addCard(card.name, card.link);
-})
-
-function showProfileModal() {
-  usernameInput.value = username.textContent.trim();
-  userAboutInput.value = userAbout.textContent.trim();
-  openPopup(profileModal);
-}
-
 function openPopup(element) {
   document.addEventListener('keydown', onEscKeyDownHanlder);
   element.closest('.modal').classList.add('modal_opened');
@@ -82,6 +78,37 @@ function openPopup(element) {
 function closePopup(element) {
   document.removeEventListener('keydown', onEscKeyDownHanlder);
   element.closest('.modal').classList.remove('modal_opened');
+}
+
+function createCard(name, link) {
+  const card = new Card(name, link, '#element', openPopup);
+  return card.getCard();
+}
+
+function addCard(card) {
+  elements.prepend(card);
+}
+
+function onCreateCardHandler(event) {
+  event.preventDefault();
+  const name = placeNameInput.value; 
+  const link = imageLinkInput.value; 
+  const card = createCard(name, link);
+  addCard(card);
+  closePopup(newPlaceModal);
+  clearInputs(event.target);
+  newPlaceFormValidator._disableSubmitBtn();
+}
+
+initialCards.forEach(cardData => {
+  const card = createCard(cardData.name, cardData.link);
+  addCard(card);
+})
+
+function showProfileModal() {
+  usernameInput.value = username.textContent.trim();
+  userAboutInput.value = userAbout.textContent.trim();
+  openPopup(profileModal);
 }
  
 function saveUserData(event) {
@@ -94,7 +121,7 @@ function saveUserData(event) {
 function onEscKeyDownHanlder(evt) {
   const openedPopup = document.querySelector('.modal_opened');
   if (evt.key === 'Escape' && openedPopup) {
-    openedPopup.classList.remove('modal_opened');
+    closePopup(openedPopup)
   }
 }
 
@@ -109,18 +136,6 @@ modals.forEach(modal => modal.addEventListener('click', evt => {
     closePopup(evt.target);
   }
 }))
-
-forms.forEach(form => {
-  const validator = new FormValidator({
-    inputSelector: '.form__input',
-    submitButtonSelector: '.form__button[type=submit]',
-    inactiveButtonClass: 'form__button_disabled',
-    inputErrorClass: 'form__input_error',
-    errorClass: '.form__error',
-    errorActiveClass: 'form__error_active',
-  }, form);
-  validator.enableValidation();
-})
 
 closeModalButtons.forEach(closeBtn => {
   closeBtn.addEventListener('click', event => closePopup(event.target));
