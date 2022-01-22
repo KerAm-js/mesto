@@ -1,4 +1,5 @@
 import Card from "./Card.js";
+import FormValidator from "./FormValidator.js";
 
 const closeModalButtons = document.querySelectorAll('.modal__close-button');
 const profileEditBtn = document.querySelector('.profile__edit-button');
@@ -15,6 +16,7 @@ const elements = document.querySelector('.elements__list');
 const placeNameInput = newPlaceForm.querySelector('.form__input_value_place-name');
 const imageLinkInput = newPlaceForm.querySelector('.form__input_value_image-link');
 const modals = document.querySelectorAll('.modal');
+const forms = Array.from(document.querySelectorAll('.form'));
 
 
 const initialCards = [
@@ -59,10 +61,6 @@ function onCreateCardHandler(event) {
   const link = imageLinkInput.value; 
   addCard(name, link);
   closePopup(newPlaceModal);
-  disableSubmitBtn({
-    submitButtonSelector: '.form__button[type=submit]',  
-    inactiveButtonClass: 'form__button_disabled',
-  }, event.target);
   clearInputs(event.target);
 }
 
@@ -111,6 +109,18 @@ modals.forEach(modal => modal.addEventListener('click', evt => {
     closePopup(evt.target);
   }
 }))
+
+forms.forEach(form => {
+  const validator = new FormValidator({
+    inputSelector: '.form__input',
+    submitButtonSelector: '.form__button[type=submit]',
+    inactiveButtonClass: 'form__button_disabled',
+    inputErrorClass: 'form__input_error',
+    errorClass: '.form__error',
+    errorActiveClass: 'form__error_active',
+  }, form);
+  validator.enableValidation();
+})
 
 closeModalButtons.forEach(closeBtn => {
   closeBtn.addEventListener('click', event => closePopup(event.target));
