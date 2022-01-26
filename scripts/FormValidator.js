@@ -13,7 +13,7 @@ class FormValidator {
     return isValid;
   }
 
-  _disableSubmitBtn() {
+  disableSubmitBtn() {
     this._submitButton.classList.add(this._settings.inactiveButtonClass);
     this._submitButton.setAttribute('disabled', true);
   }
@@ -27,7 +27,7 @@ class FormValidator {
     if (this._isFormValid()) {
       this._enableSubmitBtn();
     } else {
-      this._disableSubmitBtn();
+      this.disableSubmitBtn();
     }
   }
 

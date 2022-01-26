@@ -17,25 +17,19 @@ const placeNameInput = newPlaceForm.querySelector('.form__input_value_place-name
 const imageLinkInput = newPlaceForm.querySelector('.form__input_value_image-link');
 const modals = document.querySelectorAll('.modal');
 
-
-const profileFormValidator = new FormValidator({
+const validationConfig = {
   inputSelector: '.form__input',
   submitButtonSelector: '.form__button[type=submit]',
   inactiveButtonClass: 'form__button_disabled',
   inputErrorClass: 'form__input_error',
   errorClass: '.form__error',
   errorActiveClass: 'form__error_active',
-}, profileForm);
+}
+
+const profileFormValidator = new FormValidator(validationConfig, profileForm);
 profileFormValidator.enableValidation();
 
-const newPlaceFormValidator = new FormValidator({
-  inputSelector: '.form__input',
-  submitButtonSelector: '.form__button[type=submit]',
-  inactiveButtonClass: 'form__button_disabled',
-  inputErrorClass: 'form__input_error',
-  errorClass: '.form__error',
-  errorActiveClass: 'form__error_active',
-}, newPlaceForm);
+const newPlaceFormValidator = new FormValidator(validationConfig, newPlaceForm);
 newPlaceFormValidator.enableValidation();
 
 
@@ -97,7 +91,7 @@ function onCreateCardHandler(event) {
   addCard(card);
   closePopup(newPlaceModal);
   clearInputs(event.target);
-  newPlaceFormValidator._disableSubmitBtn();
+  newPlaceFormValidator.disableSubmitBtn();
 }
 
 initialCards.forEach(cardData => {
