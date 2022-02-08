@@ -126,7 +126,7 @@ newPlaceForm.addEventListener('submit', onCreateCardHandler);
 
 modals.forEach(modal => modal.addEventListener('click', evt => {
   const item = evt.target;
-  if (item.classList.contains('modal') && !item.classList.contains('modal__blocj')) {
+  if (item.classList.contains('modal') && !item.classList.contains('modal__block')) {
     closePopup(evt.target);
   }
 }))
