@@ -1,5 +1,5 @@
-import Card from "./Card.js";
-import FormValidator from "./FormValidator.js";
+import Card from "../components/Card.js";
+import FormValidator from "../components/FormValidator.js";
 
 const closeModalButtons = document.querySelectorAll('.modal__close-button');
 const profileEditBtn = document.querySelector('.profile__edit-button');
@@ -26,12 +26,12 @@ const validationConfig = {
   errorActiveClass: 'form__error_active',
 }
 
+
 const profileFormValidator = new FormValidator(validationConfig, profileForm);
 profileFormValidator.enableValidation();
 
 const newPlaceFormValidator = new FormValidator(validationConfig, newPlaceForm);
 newPlaceFormValidator.enableValidation();
-
 
 const initialCards = [
   {
