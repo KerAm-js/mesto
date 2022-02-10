@@ -9,7 +9,7 @@ class Card {
   _createNewCard = () => {
     this._element = document.querySelector(this._templateSelector).content.querySelector('.element').cloneNode(true);
     this._element.querySelector('.element__image').style.backgroundImage = `url(${this._link})`;
-    this._element.querySelector('.element__image').addEventListener('click', this._handleCardClick);
+    this._element.querySelector('.element__image').addEventListener('click', () => this._handleCardClick(this._name, this._link));
     this._element.querySelector('.element__title').textContent = this._name;
     this._element.querySelector('.element__like-button').addEventListener('click', this._setLike);
     this._element.querySelector('.element__delete-button').addEventListener('click', this._deleteCard);

@@ -1,0 +1,87 @@
+import Card from "../components/Card.js";
+import FormValidator from "../components/FormValidator.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import Section from "../components/Section.js";
+import UserInfo from "../components/UserInfo.js";
+import { 
+  validationConfig, 
+  initialCards,
+  profilePopupSelector, 
+  imagePopupSelector,
+  elementsContainerSelector,
+  newPlacePopupSelector,
+  usernameSelector,
+  descriptionSelector
+} from "../utils/constants.js";
+
+
+const profileEditBtn = document.querySelector('.profile__edit-button');
+const profileForm = document.forms.formProfile;
+const usernameInput = profileForm.querySelector('.form__input_value_username');
+const descriptionInput = profileForm.querySelector('.form__input_value_about');
+const newPlaceForm = document.forms.formPlace;
+const addPlaceBtn = document.querySelector('.profile__add-place-button');
+const elements = document.querySelector(elementsContainerSelector);
+
+
+const profileFormValidator = new FormValidator(validationConfig, profileForm);
+profileFormValidator.enableValidation();
+
+const newPlaceFormValidator = new FormValidator(validationConfig, newPlaceForm);
+newPlaceFormValidator.enableValidation();
+
+const profilePopup = new PopupWithForm(profilePopupSelector, saveUserData, showProfilePopup);
+profilePopup.setEventListeners();
+
+const newPlacePopup = new PopupWithForm(newPlacePopupSelector, onCreateCardHandler);
+newPlacePopup.setEventListeners();
+
+const imagePopup = new PopupWithImage(imagePopupSelector);
+imagePopup.setEventListeners();
+
+const userInfo = new UserInfo(usernameSelector, descriptionSelector);
+
+const cardList = new Section({
+  items: initialCards,
+  renderer: cardData => {
+    const card = createCard(cardData.name, cardData.link);
+    addCard(card);
+  }
+}, elementsContainerSelector);
+
+cardList.renderItems();
+
+function clearInputs(form) {
+  form.reset();
+}
+
+function createCard(name, link) {
+  const card = new Card(name, link, '#element', imagePopup.open.bind(imagePopup));
+  return card.getCard();
+}
+
+function addCard(card) {
+  elements.prepend(card);
+}
+
+function onCreateCardHandler(event, {placeName, imageLink}) {
+  event.preventDefault();
+  cardList.addItem(createCard(placeName, imageLink));
+  clearInputs(event.target);
+  newPlaceFormValidator.disableSubmitBtn();
+}
+
+function showProfilePopup() {
+  const {username, description} = userInfo.getUserInfo();
+  usernameInput.value = username
+  descriptionInput.value = description;
+}
+ 
+function saveUserData(event, {username, description}) {
+  event.preventDefault();
+  userInfo.setUserInfo(username, description);
+}
+
+profileEditBtn.addEventListener('click', profilePopup.open.bind(profilePopup));
+addPlaceBtn.addEventListener('click', newPlacePopup.open.bind(newPlacePopup));
