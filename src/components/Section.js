@@ -6,7 +6,7 @@ export default class Section {
   }
 
   addItem(item) {
-    this._container.prepend(item);
+    this._container.prepend(this._renderer(item));
   }
 
   clear() {
@@ -16,7 +16,7 @@ export default class Section {
   renderItems() {
     this.clear();
     this._items.forEach(item => {
-      this._renderer(item);
+      this.addItem(item);
     })
   }
 }

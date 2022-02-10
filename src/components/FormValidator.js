@@ -18,14 +18,14 @@ class FormValidator {
     this._submitButton.setAttribute('disabled', true);
   }
 
-  _enableSubmitBtn() {
+  enableSubmitBtn() {
     this._submitButton.classList.remove(this._settings.inactiveButtonClass);
     this._submitButton.removeAttribute('disabled');
   }
 
   _submitButtonValidation() {
     if (this._isFormValid()) {
-      this._enableSubmitBtn();
+      this.enableSubmitBtn();
     } else {
       this.disableSubmitBtn();
     }
@@ -37,7 +37,7 @@ class FormValidator {
     input.classList.add(this._settings.inputErrorClass);
     formError.classList.add(this._settings.errorActiveClass);
   }
-  
+
   _hideInputError(input) {
     const formError = this._form.querySelector(`.${input.id}-error`);
     input.classList.remove(this._settings.inputErrorClass);
@@ -59,6 +59,11 @@ class FormValidator {
         this._submitButtonValidation();
       })
     })
+  }
+
+  resetValidation() {
+    this.disableSubmitBtn();
+    this._inputs.forEach(input => this._hideInputError(input));
   }
 
   enableValidation() {

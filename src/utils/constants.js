@@ -4,6 +4,8 @@ export const usernameSelector = '.profile__username';
 export const descriptionSelector = '.profile__about';
 export const imagePopupSelector = '.modal_type_image';
 export const elementsContainerSelector = '.elements__list';
+export const profileFormName = 'formProfile';
+export const placeFormName = 'formPlace';
 
 export const validationConfig = {
   inputSelector: '.form__input',
