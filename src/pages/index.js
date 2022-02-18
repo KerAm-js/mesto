@@ -1,3 +1,4 @@
+import Api from "../components/Api.js";
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import PopupWithForm from "../components/PopupWithForm.js";
@@ -15,7 +16,9 @@ import {
   usernameSelector,
   descriptionSelector,
   profileFormName,
-  placeFormName
+  placeFormName,
+  token,
+  groupId
 } from "../utils/constants.js";
 
 const profileEditBtn = document.querySelector('.profile__edit-button');
@@ -44,6 +47,17 @@ const imagePopup = new PopupWithImage(imagePopupSelector);
 imagePopup.setEventListeners();
 
 const userInfo = new UserInfo(usernameSelector, descriptionSelector);
+
+const api = new Api({
+  serverUrl: `https://nomoreparties.co/v1/${groupId}`,
+  token,
+  groupId,
+  userAddress: '/users/me',
+  avatarAddress: `/avatar`,
+  cardsAddress: '/cards',
+  likeAddress: '/like'
+})
+api.getUserData().then(data => userInfo.setUserInfo(data.name, data.about));
 
 const cardList = new Section({
   items: initialCards,
