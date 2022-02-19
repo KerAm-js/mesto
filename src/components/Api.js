@@ -23,7 +23,12 @@ class Api {
         authorization: this.token
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
       .catch(err => console.log(err))
   }
 
@@ -33,7 +38,12 @@ class Api {
         authorization: this.token
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
       .catch(err => console.log(err))
   }
 
@@ -49,7 +59,28 @@ class Api {
         link,
       })
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+      .catch(err => console.log(err))
+  }
+
+  deleteCard = id => {
+    return fetch(`${this.cardsUrl}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: this.token,
+      },
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
       .catch(err => console.log(err))
   }
 
@@ -65,7 +96,12 @@ class Api {
         about,
       })
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
       .catch(err => console.log(err))
   }
 }

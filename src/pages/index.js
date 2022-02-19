@@ -61,7 +61,7 @@ const api = new Api({
   cardsAddress: '/cards',
   likeAddress: '/like'
 })
-api.getUserData().then(data => userInfo.setUserInfo(data.name, data.about));
+api.getUserData().then(data => userInfo.setUserInfo(data));
 
 let cardList;
 
@@ -69,14 +69,14 @@ api.getCards().then(cards => {
   cardList = new Section({
     items: cards,
     renderer: cardData => {
-      const card = new Card(cardData.name, cardData.link, cardData.likes, '#element', imagePopup.open.bind(imagePopup), onDeleteCard);
+      const card = new Card(cardData, userInfo.getUserInfo().id, '#element', imagePopup.open.bind(imagePopup), api.deleteCard, confirmCardDeleting);
       return card.getCard();
     }
   }, elementsContainerSelector);
   cardList.renderItems();
 });
 
-function onDeleteCard(action) {
+function confirmCardDeleting(action) {
   confirmActionPopup.setEventListener(action);
   confirmActionPopup.open();
 }
@@ -89,16 +89,16 @@ function onCreateCardHandler(event, {placeName, imageLink}) {
 }
 
 function showProfilePopup() {
-  const {username, description} = userInfo.getUserInfo();
-  usernameInput.value = username
-  descriptionInput.value = description;
+  const {name, about} = userInfo.getUserInfo();
+  usernameInput.value = name
+  descriptionInput.value = about;
   formValidators[profileFormName].enableSubmitBtn();
 }
  
 function saveUserData(event, {username, description}) {
   event.preventDefault();
   api.editProfile(username, description).then(res => console.log(res));
-  userInfo.setUserInfo(username, description);
+  userInfo.setUserInfo({name: username, about: description});
 }
 
 function onProfileEditBtnHanlder() {
