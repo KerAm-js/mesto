@@ -1,5 +1,6 @@
 import Api from "../components/Api.js";
 import Card from "../components/Card.js";
+import ConfirmPopup from "../components/ConfirmPopup.js";
 import FormValidator from "../components/FormValidator.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithImage from "../components/PopupWithImage.js";
@@ -17,7 +18,8 @@ import {
   profileFormName,
   placeFormName,
   token,
-  groupId
+  groupId,
+  confirmPopupSelector
 } from "../utils/constants.js";
 
 const profileEditBtn = document.querySelector('.profile__edit-button');
@@ -45,6 +47,9 @@ newPlacePopup.setEventListeners();
 const imagePopup = new PopupWithImage(imagePopupSelector);
 imagePopup.setEventListeners();
 
+const confirmActionPopup = new ConfirmPopup(confirmPopupSelector);
+confirmActionPopup.setEventListeners();
+
 const userInfo = new UserInfo(usernameSelector, descriptionSelector);
 
 const api = new Api({
@@ -64,13 +69,17 @@ api.getCards().then(cards => {
   cardList = new Section({
     items: cards,
     renderer: cardData => {
-      const card = new Card(cardData.name, cardData.link, cardData.likes, '#element', imagePopup.open.bind(imagePopup));
+      const card = new Card(cardData.name, cardData.link, cardData.likes, '#element', imagePopup.open.bind(imagePopup), onDeleteCard);
       return card.getCard();
     }
   }, elementsContainerSelector);
   cardList.renderItems();
 });
 
+function onDeleteCard(action) {
+  confirmActionPopup.setEventListener(action);
+  confirmActionPopup.open();
+}
 
 function onCreateCardHandler(event, {placeName, imageLink}) {
   event.preventDefault();

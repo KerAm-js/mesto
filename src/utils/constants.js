@@ -8,6 +8,7 @@ export const imagePopupSelector = '.modal_type_image';
 export const elementsContainerSelector = '.elements__list';
 export const profileFormName = 'formProfile';
 export const placeFormName = 'formPlace';
+export const confirmPopupSelector = '.modal_type_confirm';
 
 export const validationConfig = {
   inputSelector: '.form__input',

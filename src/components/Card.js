@@ -1,16 +1,17 @@
 class Card {
-  constructor(name, link, likes, templateSelector, handleCardClick) {
+  constructor(name, link, likes, templateSelector, handleCardClick, confirmCardDeleting) {
     this._name = name;
     this._link = link;
     this._likes = likes;
     this._handleCardClick = handleCardClick;
+    this._confirmCardDeleting = confirmCardDeleting;
     this._templateSelector = templateSelector;
   }
 
   _setEventListeners() {
     this._element.querySelector('.element__image').addEventListener('click', () => this._handleCardClick(this._name, this._link));
     this._element.querySelector('.element__like-button').addEventListener('click', this._setLike);
-    this._element.querySelector('.element__delete-button').addEventListener('click', this._deleteCard);
+    this._element.querySelector('.element__delete-button').addEventListener('click', this._askCardDeleting);
   }
 
   _createNewCard = () => {
@@ -20,6 +21,10 @@ class Card {
     this._element.querySelector('.element__like-count').textContent = this._likes.length;
     this._setEventListeners();
     return this._element;
+  }
+
+  _askCardDeleting = () => {
+    this._confirmCardDeleting(this._deleteCard);
   }
 
   _deleteCard = () => {
