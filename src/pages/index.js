@@ -8,7 +8,6 @@ import UserInfo from "../components/UserInfo.js";
 import '../index.css';
 import { 
   validationConfig, 
-  initialCards,
   profilePopupSelector, 
   imagePopupSelector,
   elementsContainerSelector,
@@ -59,15 +58,17 @@ const api = new Api({
 })
 api.getUserData().then(data => userInfo.setUserInfo(data.name, data.about));
 
-const cardList = new Section({
-  items: initialCards,
-  renderer: cardData => {
-    const card = new Card(cardData.name, cardData.link, '#element', imagePopup.open.bind(imagePopup));
-    return card.getCard();
-  }
-}, elementsContainerSelector);
-
-cardList.renderItems();
+let cardList;
+api.getCards().then(cards => {
+  cardList = new Section({
+    items: cards,
+    renderer: cardData => {
+      const card = new Card(cardData.name, cardData.link, '#element', imagePopup.open.bind(imagePopup));
+      return card.getCard();
+    }
+  }, elementsContainerSelector);
+  cardList.renderItems();
+});
 
 function onCreateCardHandler(event, {placeName, imageLink}) {
   event.preventDefault();

@@ -24,7 +24,16 @@ class Api {
       }
     })
       .then(res => res.json())
-      .then(res => res)
+      .catch(err => console.log(err))
+  }
+
+  getCards() {
+    return fetch(this.cardsUrl, {
+      headers: {
+        authorization: this.token
+      }
+    })
+      .then(res => res.json())
       .catch(err => console.log(err))
   }
 }
