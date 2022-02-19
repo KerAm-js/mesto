@@ -36,6 +36,22 @@ class Api {
       .then(res => res.json())
       .catch(err => console.log(err))
   }
+
+  editProfile(name, about) {
+    return fetch(this.userUrl, {
+      method: 'PATCH',
+      headers: {
+        authorization: this.token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        about,
+      })
+    })
+      .then(res => res.json())
+      .catch(err => console.log(err))
+  }
 }
 
 export default Api;

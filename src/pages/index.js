@@ -59,6 +59,7 @@ const api = new Api({
 api.getUserData().then(data => userInfo.setUserInfo(data.name, data.about));
 
 let cardList;
+
 api.getCards().then(cards => {
   cardList = new Section({
     items: cards,
@@ -69,6 +70,7 @@ api.getCards().then(cards => {
   }, elementsContainerSelector);
   cardList.renderItems();
 });
+
 
 function onCreateCardHandler(event, {placeName, imageLink}) {
   event.preventDefault();
@@ -85,6 +87,7 @@ function showProfilePopup() {
  
 function saveUserData(event, {username, description}) {
   event.preventDefault();
+  api.editProfile(username, description).then(res => console.log(res));
   userInfo.setUserInfo(username, description);
 }
 
