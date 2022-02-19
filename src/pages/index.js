@@ -64,7 +64,7 @@ api.getCards().then(cards => {
   cardList = new Section({
     items: cards,
     renderer: cardData => {
-      const card = new Card(cardData.name, cardData.link, '#element', imagePopup.open.bind(imagePopup));
+      const card = new Card(cardData.name, cardData.link, cardData.likes, '#element', imagePopup.open.bind(imagePopup));
       return card.getCard();
     }
   }, elementsContainerSelector);

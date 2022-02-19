@@ -1,7 +1,8 @@
 class Card {
-  constructor(name, link, templateSelector, handleCardClick) {
+  constructor(name, link, likes, templateSelector, handleCardClick) {
     this._name = name;
     this._link = link;
+    this._likes = likes;
     this._handleCardClick = handleCardClick;
     this._templateSelector = templateSelector;
   }
@@ -16,6 +17,7 @@ class Card {
     this._element = document.querySelector(this._templateSelector).content.querySelector('.element').cloneNode(true);
     this._element.querySelector('.element__image').style.backgroundImage = `url(${this._link})`;
     this._element.querySelector('.element__title').textContent = this._name;
+    this._element.querySelector('.element__like-count').textContent = this._likes.length;
     this._setEventListeners();
     return this._element;
   }
