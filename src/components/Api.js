@@ -37,6 +37,22 @@ class Api {
       .catch(err => console.log(err))
   }
 
+  addCard(name, link) {
+    return fetch(this.cardsUrl, {
+      method: 'POST',
+      headers: {
+        authorization: this.token,
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        link,
+      })
+    })
+      .then(res => res.json())
+      .catch(err => console.log(err))
+  }
+
   editProfile(name, about) {
     return fetch(this.userUrl, {
       method: 'PATCH',

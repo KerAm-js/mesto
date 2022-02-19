@@ -74,6 +74,7 @@ api.getCards().then(cards => {
 
 function onCreateCardHandler(event, {placeName, imageLink}) {
   event.preventDefault();
+  api.addCard(placeName, imageLink).then(res => console.log(res));
   cardList.addItem({name: placeName, link: imageLink});
   formValidators[profileFormName].disableSubmitBtn();
 }
