@@ -59,7 +59,7 @@ const api = new Api({
   userAddress: '/users/me',
   avatarAddress: `/avatar`,
   cardsAddress: '/cards',
-  likeAddress: '/like'
+  likeAddress: '/likes'
 })
 api.getUserData().then(data => userInfo.setUserInfo(data));
 
@@ -69,7 +69,16 @@ api.getCards().then(cards => {
   cardList = new Section({
     items: cards,
     renderer: cardData => {
-      const card = new Card(cardData, userInfo.getUserInfo().id, '#element', imagePopup.open.bind(imagePopup), api.deleteCard, confirmCardDeleting);
+      const card = new Card(
+        cardData, 
+        userInfo.getUserInfo().id, 
+        '#element', 
+        imagePopup.open.bind(imagePopup), 
+        api.deleteCard, 
+        confirmCardDeleting,
+        api.setLike,
+        api.deleteLike,
+      );
       return card.getCard();
     }
   }, elementsContainerSelector);
@@ -97,8 +106,9 @@ function showProfilePopup() {
  
 function saveUserData(event, {username, description}) {
   event.preventDefault();
-  api.editProfile(username, description).then(res => console.log(res));
-  userInfo.setUserInfo({name: username, about: description});
+  api.editProfile(username, description).then(res => {
+    userInfo.setUserInfo({name: res.name, about: res.about});
+  });
 }
 
 function onProfileEditBtnHanlder() {
