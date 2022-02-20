@@ -9,6 +9,7 @@ class Card {
     setLikeAtServer,
     deleteLikeAtServer,
   ) {
+    console.log(owner._id);
     this._name = name;
     this._link = link;
     this._likes = likes;
@@ -16,6 +17,7 @@ class Card {
     this._id = _id;
     this._userId = userId;
     this._isUserOwner =  this._userId === this._ownerId;
+    this._isUserLike = this._likes.find(owner => owner._id === this._userId);
     this._handleCardClick = handleCardClick;
     this._deleteCardFromServer = deleteCardFromServer;
     this._confirmCardDeleting = confirmCardDeleting;
@@ -35,11 +37,14 @@ class Card {
   _createNewCard = () => {
     this._element = document.querySelector(this._templateSelector).content.querySelector('.element').cloneNode(true);
     this._deleteBtn = this._element.querySelector('.element__delete-button');
+    this._likeBtn = this._element.querySelector('.element__like-button');
+    this._likesCount = this._element.querySelector('.element__like-count');
     if (!this._isUserOwner) {
       this._deleteBtn.remove();
     }
-    this._likeBtn = this._element.querySelector('.element__like-button');
-    this._likesCount = this._element.querySelector('.element__like-count');
+    if (this._isUserLike) {
+      this._likeBtn.classList.add('element__like-button_active');
+    }
     this._setLikesCount(this._likes.length);
     this._element.querySelector('.element__image').style.backgroundImage = `url(${this._link})`;
     this._element.querySelector('.element__title').textContent = this._name;

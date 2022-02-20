@@ -65,7 +65,7 @@ class Api {
         }
         return Promise.reject(`Ошибка: ${res.status}`);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
   }
 
   deleteCard = id => {
@@ -134,7 +134,27 @@ class Api {
         }
         return Promise.reject(`Ошибка: ${res.status}`);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+  }
+
+  editAvatar(avatar) {
+    return fetch(`${this._avatarUrl}`, {
+      method: 'PATCH',
+      headers: {
+        authorization: this._token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        avatar,
+      })
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+      .catch(err => console.log(err))
   }
 }
 

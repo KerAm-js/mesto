@@ -19,13 +19,20 @@ import {
   placeFormName,
   token,
   groupId,
-  confirmPopupSelector
+  confirmPopupSelector,
+  editAvatarPopupSelector,
+  avatarFormName,
+  avatarSelector
 } from "../utils/constants.js";
 
 const profileEditBtn = document.querySelector('.profile__edit-button');
+const avatarWrapper = document.querySelector('.profile__avatar-wrapper');
+const editAvatarBtn = avatarWrapper.querySelector('.profile__edit-avatar-btn');
 const profileForm = document.forms.formProfile;
 const usernameInput = profileForm.querySelector('.form__input_value_username');
 const descriptionInput = profileForm.querySelector('.form__input_value_about');
+const avatarForm = document.forms.formAvatar;
+const avatarLinkInput = avatarForm.querySelector('.form__input_value_avatar-link');
 const addPlaceBtn = document.querySelector('.profile__add-place-button');
 
 const formValidators = {};
@@ -44,13 +51,16 @@ profilePopup.setEventListeners();
 const newPlacePopup = new PopupWithForm(newPlacePopupSelector, onCreateCardHandler);
 newPlacePopup.setEventListeners();
 
+const editAvatarPopup = new PopupWithForm(editAvatarPopupSelector, editAvatar, showAvatarPopup);
+editAvatarPopup.setEventListeners();
+
 const imagePopup = new PopupWithImage(imagePopupSelector);
 imagePopup.setEventListeners();
 
 const confirmActionPopup = new ConfirmPopup(confirmPopupSelector);
 confirmActionPopup.setEventListeners();
 
-const userInfo = new UserInfo(usernameSelector, descriptionSelector);
+const userInfo = new UserInfo(usernameSelector, descriptionSelector, avatarSelector);
 
 const api = new Api({
   serverUrl: `https://nomoreparties.co/v1/${groupId}`,
@@ -61,40 +71,67 @@ const api = new Api({
   cardsAddress: '/cards',
   likeAddress: '/likes'
 })
-api.getUserData().then(data => userInfo.setUserInfo(data));
+api.getUserData().then(res => userInfo.setUserInfo(res));
 
 let cardList;
 
-api.getCards().then(cards => {
-  cardList = new Section({
-    items: cards,
-    renderer: cardData => {
-      const card = new Card(
-        cardData, 
-        userInfo.getUserInfo().id, 
-        '#element', 
-        imagePopup.open.bind(imagePopup), 
-        api.deleteCard, 
-        confirmCardDeleting,
-        api.setLike,
-        api.deleteLike,
-      );
-      return card.getCard();
-    }
-  }, elementsContainerSelector);
-  cardList.renderItems();
-});
+function updateCardList() {
+  api.getCards().then(cards => {
+    cardList = new Section({
+      items: cards,
+      renderer: cardData => {
+        const card = new Card(
+          cardData, 
+          userInfo.getUserInfo().id, 
+          '#element', 
+          imagePopup.open.bind(imagePopup), 
+          api.deleteCard, 
+          confirmCardDeleting,
+          api.setLike,
+          api.deleteLike,
+        );
+        return card.getCard();
+      }
+    }, elementsContainerSelector);
+    cardList.renderItems();
+  });
+}
+updateCardList();
+
+function editAvatar({avatarLink}) {
+  return new Promise((resolve, reject) => {
+    api.editAvatar(avatarLink)
+      .then(res => {
+        userInfo.setUserInfo({avatar: res.avatar});
+        resolve();
+      })
+      .catch(err => {
+        console.log(err);
+        reject();
+      });
+  })
+}
 
 function confirmCardDeleting(action) {
   confirmActionPopup.setEventListener(action);
   confirmActionPopup.open();
 }
 
-function onCreateCardHandler(event, {placeName, imageLink}) {
-  event.preventDefault();
-  api.addCard(placeName, imageLink).then(res => console.log(res));
-  cardList.addItem({name: placeName, link: imageLink});
-  formValidators[profileFormName].disableSubmitBtn();
+function onCreateCardHandler({placeName, imageLink}) {
+  return new Promise((resolve, reject) => {
+    api.addCard(placeName, imageLink)
+      .then(() => {
+        updateCardList();
+        resolve()
+      })
+      .catch(err => {
+        console.log(err);
+        reject();
+      })
+      .finally(() => {
+        formValidators[profileFormName].disableSubmitBtn();
+      })
+  })
 }
 
 function showProfilePopup() {
@@ -103,23 +140,42 @@ function showProfilePopup() {
   descriptionInput.value = about;
   formValidators[profileFormName].enableSubmitBtn();
 }
+
+function showAvatarPopup() {
+  const {avatar} = userInfo.getUserInfo();
+  avatarLinkInput.value = avatar;
+  formValidators[avatarFormName].enableSubmitBtn()
+}
  
-function saveUserData(event, {username, description}) {
-  event.preventDefault();
-  api.editProfile(username, description).then(res => {
-    userInfo.setUserInfo({name: res.name, about: res.about});
-  });
+function saveUserData({username, description}) {
+  return new Promise((resolve, reject) => {
+    api.editProfile(username, description)
+      .then(res => {
+        userInfo.setUserInfo({name: res.name, about: res.about});
+        resolve();
+      })
+      .catch(err => {
+        console.log(err);
+        reject();
+      });
+  })
 }
 
-function onProfileEditBtnHanlder() {
+function onProfileEditHanlder() {
   formValidators[profileFormName].resetValidation();
   profilePopup.open();
 }
 
-function onAddPlaceBtnHanlder() {
+function onAddPlaceHanlder() {
   formValidators[placeFormName].resetValidation();
   newPlacePopup.open();
 }
 
-profileEditBtn.addEventListener('click', onProfileEditBtnHanlder);
-addPlaceBtn.addEventListener('click', onAddPlaceBtnHanlder);
+function onAvatarEditHandler() {
+  formValidators[avatarFormName].resetValidation();
+  editAvatarPopup.open();
+}
+
+profileEditBtn.addEventListener('click', onProfileEditHanlder);
+addPlaceBtn.addEventListener('click', onAddPlaceHanlder);
+editAvatarBtn.addEventListener('click', onAvatarEditHandler);
