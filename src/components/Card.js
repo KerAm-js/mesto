@@ -9,7 +9,6 @@ class Card {
     setLikeAtServer,
     deleteLikeAtServer,
   ) {
-    console.log(owner._id);
     this._name = name;
     this._link = link;
     this._likes = likes;
@@ -57,9 +56,15 @@ class Card {
   }
 
   _deleteCard = () => {
-    this._deleteCardFromServer(this._id);
-    this._element.remove();
-    this._element = null;
+    return new Promise((resolve, reject) => {
+      this._deleteCardFromServer(this._id)
+        .then(() => {
+          this._element.remove();
+          this._element = null;
+          resolve();
+        })
+        .catch(err => reject(err));
+    })
   }
 
   _setLikesCount = count => {
@@ -68,11 +73,19 @@ class Card {
 
   _setLike = () => {
     if (this._likeBtn.classList.contains('element__like-button_active')) {
-      this._deleteLikeAtServer(this._id).then(res => this._setLikesCount(res.likes.length));
-      this._likeBtn.classList.remove('element__like-button_active');
+      this._deleteLikeAtServer(this._id)
+        .then(res => {
+          this._setLikesCount(res.likes.length);
+          this._likeBtn.classList.remove('element__like-button_active');
+        })
+        .catch(err => console.log(err));
     } else {
-      this._setLikeAtServer(this._id).then(res => this._setLikesCount(res.likes.length));
-      this._likeBtn.classList.add('element__like-button_active');
+      this._setLikeAtServer(this._id)
+        .then(res => {
+          this._setLikesCount(res.likes.length);
+          this._likeBtn.classList.add('element__like-button_active');
+        })
+        .catch(err => console.log(err));
     }
   } 
 

@@ -8,17 +8,18 @@ export default class ConfirmPopup extends Popup {
 
   _onSubmit = evt => {
     evt.preventDefault();
-    this._confirmAction();
-    this.close();
+    this._confirmAction()
+      .then(this.close.bind(this))
+      .catch(err => console.log(err));
   }
 
-  setEventListener = action => {
-    this._confirmAction = action;
+  setEventListeners() {
+    super.setEventListeners();
     this._submitBtn.addEventListener('click', this._onSubmit);
   }
 
-  close() {
-    super.close();
-    this._submitBtn.removeEventListener('click', this._onSubmit);
+  setAction = action => {
+    console.log(action);
+    this._confirmAction = action;
   }
 }

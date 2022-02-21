@@ -71,32 +71,35 @@ const api = new Api({
   cardsAddress: '/cards',
   likeAddress: '/likes'
 })
-api.getUserData().then(res => userInfo.setUserInfo(res));
 
 let cardList;
 
-function updateCardList() {
-  api.getCards().then(cards => {
-    cardList = new Section({
-      items: cards,
-      renderer: cardData => {
-        const card = new Card(
-          cardData, 
-          userInfo.getUserInfo().id, 
-          '#element', 
-          imagePopup.open.bind(imagePopup), 
-          api.deleteCard, 
-          confirmCardDeleting,
-          api.setLike,
-          api.deleteLike,
-        );
-        return card.getCard();
-      }
-    }, elementsContainerSelector);
-    cardList.renderItems();
-  });
+function updateCardList(cards) {
+  cardList = new Section({
+    items: cards,
+    renderer: cardData => {
+      const card = new Card(
+        cardData, 
+        userInfo.getUserInfo().id, 
+        '#element', 
+        imagePopup.open.bind(imagePopup), 
+        api.deleteCard, 
+        confirmCardDeleting,
+        api.setLike,
+        api.deleteLike,
+      );
+      return card.getCard();
+    }
+  }, elementsContainerSelector);
+  cardList.renderItems();
 }
-updateCardList();
+
+Promise.all([api.getUserData(), api.getCards()])
+  .then(([userData, cards]) => {
+    userInfo.setUserInfo(userData);
+    updateCardList(cards);
+  })
+  .catch(err => console.log(err));
 
 function editAvatar({avatarLink}) {
   return new Promise((resolve, reject) => {
@@ -113,7 +116,7 @@ function editAvatar({avatarLink}) {
 }
 
 function confirmCardDeleting(action) {
-  confirmActionPopup.setEventListener(action);
+  confirmActionPopup.setAction(action);
   confirmActionPopup.open();
 }
 
@@ -121,16 +124,16 @@ function onCreateCardHandler({placeName, imageLink}) {
   return new Promise((resolve, reject) => {
     api.addCard(placeName, imageLink)
       .then(() => {
-        updateCardList();
-        resolve()
+        api.getCards()
+          .then(cards => updateCardList(cards))
+          .catch(err => console.log(err));
+        formValidators[profileFormName].disableSubmitBtn();
+        resolve();
       })
       .catch(err => {
         console.log(err);
         reject();
-      })
-      .finally(() => {
-        formValidators[profileFormName].disableSubmitBtn();
-      })
+      });
   })
 }
 
